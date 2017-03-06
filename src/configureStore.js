@@ -7,7 +7,7 @@ import todoApp from './reducers';
 const thunk = (store) => (next) => (action) =>
 // If action is a func, then assume it's a thunk that wants the dispatch func to be injected into it
 	typeof action === 'function' ?
-		action(store.dispatch) :
+		action(store.dispatch, store.getState) :
 		next(action);
 
 // MANY MIDDLEWARES ARE AVAILABLE FROM NPM
