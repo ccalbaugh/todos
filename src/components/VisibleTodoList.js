@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router'; // Takes a component and returns a new component that injects router related props (like params) inside your component
 import * as actions from '../actions';
-import { getVisibleTodos, getIsFetching } from '../reducers';
+import { getVisibleTodos, getErrorMessage, getIsFetching } from '../reducers';
 import TodoList from './TodoList';
+import FetchError from './FetchError';
 
 class VisibleTodoList extends Component { // The only reason we create a component here is b/c
 	componentDidMount() { // you can't overwrite the lifecycle hooks of a generated component
@@ -23,9 +24,17 @@ class VisibleTodoList extends Component { // The only reason we create a compone
 	}
 
 	render() {
-		const { toggleTodo, todos, isFetching } = this.props;
+		const { toggleTodo, errorMessage, todos, isFetching } = this.props;
 		if (isFetching && !todos.length) {
 			return <p>Loading...</p>;
+		}
+		if (errorMessage && !todos.length) {
+			return (
+				<FetchError
+					message={errorMessage}
+					onRetry={() => this.fetchData()}
+				/>
+			);
 		}
 
 		return (
@@ -41,6 +50,7 @@ const mapStateToProps = (state, { params }) => { // { params } === ownProps.para
 	const filter = params.filter || 'all'; // We get the params from withRouter call below
 	return {
 		todos: getVisibleTodos(state, filter), // now we can just pass the state b/c getVisibleTodos encapsulates all the knowledge
+		errorMessage: getErrorMessage(state, filter),
 		isFetching: getIsFetching(state, filter),
         filter,                      // about the application state shape
 	} // explicitly passing filter as a prop makes it available inside the component
