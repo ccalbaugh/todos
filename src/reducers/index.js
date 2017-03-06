@@ -20,5 +20,8 @@ export const getVisibleTodos = (state, filter) => { // but any export starting w
   return ids.map(id => fromById.getTodo(state.byId, id));
 };
 
-getIsFetching = (state, filter) =>
+export const getIsFetching = (state, filter) =>
   fromList.getIsFetching(state.listByFilter[filter]);
+
+export const getErrorMessage = (state, filter) =>
+  fromList.getErrorMessage(state.listByFilter[filter]);
