@@ -1,4 +1,5 @@
 import { v4 } from 'node-uuid';
+import { getIsFetching } from '../reducers':
 import * as api from '../api';
 
 export requestTodos = (filter) => ({
@@ -12,7 +13,13 @@ const receiveTodos = (filter, response) => ({
 	response,
 });
 
-export const fetchTodos = (filter) => (dispatch) => {
+export const fetchTodos = (filter) => (dispatch, getState) => {
+	// Now this func is conditionally calling the funcs that use network operations
+	// only if one isn't already being requested
+	if (getIsFetching(getState(), filter)) {
+		return;
+	}
+
 	dispatch(requestTodos(filter));
 
 	return api.fetchTodos(filter).then(response => {
