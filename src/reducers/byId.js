@@ -1,6 +1,6 @@
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case 'RECEIVE_TODOS':
+    case 'FETCH_TODOS_SUCCESS':
       const nextState = { ...state }; // This shallow copy corresponds to the lookup table
       action.response.forEach(todo => {
         nextState[todo.id] = todo;
