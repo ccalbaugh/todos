@@ -1,7 +1,14 @@
 import { createStore, applyMiddleware } from 'redux';
-import promise from 'redux-promise';
 import createLogger from 'redux-logger';
 import todoApp from './reducers';
+
+// This think middleware supports the dispatching of thunks
+// It takes the store, next middleware, and action as current args (just like any other middleware)
+const thunk = (store) => (next) => (action) =>
+// If action is a func, then assume it's a thunk that wants the dispatch func to be injected into it
+	typeof action === 'function' ?
+		action(store.dispatch) :
+		next(action);
 
 // MANY MIDDLEWARES ARE AVAILABLE FROM NPM
 // const logger = (store) => (next) => {
@@ -33,7 +40,7 @@ import todoApp from './reducers';
 // };
 
 const configureStore = () => {
-	const middlewares = [promise];
+	const middlewares = [thunk];
 	if (process.env.NODE_ENV !== 'production') {
 		middlewares.push(createLogger());
 	}
