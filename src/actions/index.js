@@ -17,7 +17,8 @@ export const fetchTodos = (filter) => (dispatch, getState) => {
 	// Now this func is conditionally calling the funcs that use network operations
 	// only if one isn't already being requested
 	if (getIsFetching(getState(), filter)) {
-		return;
+		// This func normally returns a promise so let's be consistent
+		return Promise.resolve();
 	}
 
 	dispatch(requestTodos(filter));
